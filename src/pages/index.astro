@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import type { Recipe } from '../types';
+
+const DB = Astro.locals.runtime?.env?.DB as D1Database | undefined;
+let recipes: Recipe[] = [];
+
+if (DB) {
+  const result = await DB.prepare('SELECT * FROM recipes ORDER BY created_at DESC').all<Recipe>();
+  recipes = result.results || [];
+}
+---
+
+<Layout>
+	<div class="container mx-auto px-4 py-8">
+		<div class="flex justify-between items-center mb-8">
+			<h1 class="text-4xl font-bold">My Cookbook</h1>
+			<a href="/recipes/new" class="btn btn-primary">
+				Add New Recipe
+			</a>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{recipes && recipes.map((recipe) => (
+				<a href={`/recipes/${recipe.id}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+					<figure class="h-48 bg-base-200">
+						{recipe.image_url ? (
+							<img src={recipe.image_url} alt={recipe.title} class="w-full h-full object-cover" />
+						) : (
+							<div class="flex items-center justify-center w-full h-full text-base-content/20">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+								</svg>
+							</div>
+						)}
+					</figure>
+					<div class="card-body">
+						<h2 class="card-title">{recipe.title}</h2>
+						<p class="text-sm line-clamp-2">{recipe.description}</p>
+						<div class="card-actions justify-between items-center mt-4">
+							<div class="flex gap-2">
+								{recipe.category && (
+									<span class="badge badge-outline">{recipe.category}</span>
+								)}
+								{recipe.difficulty && (
+									<span class={`badge ${
+										recipe.difficulty === 'easy' ? 'badge-success' :
+										recipe.difficulty === 'medium' ? 'badge-warning' :
+										'badge-error'
+									}`}>
+										{recipe.difficulty}
+									</span>
+								)}
+							</div>
+							{(recipe.prep_time || recipe.cook_time) && (
+								<div class="text-sm text-base-content/70">
+									<span>⏱️ {(recipe.prep_time || 0) + (recipe.cook_time || 0)} min</span>
+								</div>
+							)}
+						</div>
+					</div>
+				</a>
+			))}
+		</div>
+
+		{!recipes || recipes.length === 0 && (
+			<div class="text-center py-16">
+				<p class="text-xl text-base-content/60 mb-4">No recipes yet</p>
+				<a href="/recipes/new" class="btn btn-primary">
+					Create Your First Recipe
+				</a>
+			</div>
+		)}
+	</div>
+</Layout>
