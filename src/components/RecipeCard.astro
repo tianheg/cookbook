@@ -1,0 +1,71 @@
+---
+import type { Recipe } from '../db/schema';
+
+interface Props {
+  recipe: Recipe;
+}
+
+const { recipe } = Astro.props;
+const totalTime = (recipe.prepTime || 0) + (recipe.cookTime || 0);
+---
+
+<a 
+  href={`/recipes/${recipe.id}`} 
+  class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow"
+>
+  <figure class="h-48 bg-base-200">
+    {recipe.imageUrl ? (
+      <img 
+        src={recipe.imageUrl} 
+        alt={recipe.title} 
+        class="w-full h-full object-cover" 
+      />
+    ) : (
+      <div class="flex items-center justify-center w-full h-full text-base-content/20">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="h-20 w-20" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6" 
+          />
+        </svg>
+      </div>
+    )}
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">{recipe.title}</h2>
+    {recipe.description && (
+      <p class="text-sm line-clamp-2">{recipe.description}</p>
+    )}
+    <div class="card-actions justify-between items-center mt-4">
+      <div class="flex gap-2">
+        {recipe.category && (
+          <span class="badge badge-outline">{recipe.category}</span>
+        )}
+        {recipe.difficulty && (
+          <span 
+            class={`badge ${
+              recipe.difficulty === 'easy' ? 'badge-success' :
+              recipe.difficulty === 'medium' ? 'badge-warning' :
+              'badge-error'
+            }`}
+          >
+            {recipe.difficulty}
+          </span>
+        )}
+      </div>
+      {totalTime > 0 && (
+        <div class="text-sm text-base-content/70">
+          <span>⏱️ {totalTime} min</span>
+        </div>
+      )}
+    </div>
+  </div>
+</a>

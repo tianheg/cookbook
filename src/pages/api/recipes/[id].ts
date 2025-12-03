@@ -1,8 +1,11 @@
 import type { APIRoute } from 'astro';
-import type { Recipe, Ingredient, Instruction, RecipeWithDetails } from '../../../types';
+import { getDB } from '../../../db/client';
+import { getRecipeWithDetails, deleteRecipe, updateRecipe } from '../../../db/queries';
+import { createRecipeSchema } from '../../../db/schema';
+import { ZodError } from 'zod';
 
 export const GET: APIRoute = async ({ params, locals }) => {
-  const DB = locals.runtime?.env?.DB as D1Database | undefined;
+  const DB = (locals.runtime as any)?.env?.DB as D1Database | undefined;
   const { id } = params;
 
   if (!DB) {
@@ -20,10 +23,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
   }
 
   try {
-    // Fetch recipe
-    const recipe = await DB.prepare('SELECT * FROM recipes WHERE id = ?')
-      .bind(id)
-      .first<Recipe>();
+    const db = getDB(DB);
+    const recipe = await getRecipeWithDetails(db, parseInt(id));
 
     if (!recipe) {
       return new Response(JSON.stringify({ error: 'Recipe not found' }), {
@@ -32,27 +33,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       });
     }
 
-    // Fetch ingredients
-    const { results: ingredients } = await DB.prepare(
-      'SELECT * FROM ingredients WHERE recipe_id = ? ORDER BY sort_order'
-    )
-      .bind(id)
-      .all<Ingredient>();
-
-    // Fetch instructions
-    const { results: instructions } = await DB.prepare(
-      'SELECT * FROM instructions WHERE recipe_id = ? ORDER BY step_number'
-    )
-      .bind(id)
-      .all<Instruction>();
-
-    const recipeWithDetails: RecipeWithDetails = {
-      ...recipe,
-      ingredients: ingredients || [],
-      instructions: instructions || [],
-    };
-
-    return new Response(JSON.stringify({ recipe: recipeWithDetails }), {
+    return new Response(JSON.stringify({ recipe }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -65,8 +46,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
   }
 };
 
-export const DELETE: APIRoute = async ({ params, locals }) => {
-  const DB = locals.runtime?.env?.DB as D1Database | undefined;
+export const PUT: APIRoute = async ({ params, request, locals }) => {
+  const DB = (locals.runtime as any)?.env?.DB as D1Database | undefined;
   const { id } = params;
 
   if (!DB) {
@@ -84,7 +65,76 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
   }
 
   try {
-    await DB.prepare('DELETE FROM recipes WHERE id = ?').bind(id).run();
+    const data = await request.json();
+    
+    // Validate input with Zod (partial validation for updates)
+    const validated = createRecipeSchema.partial().parse(data);
+    
+    const db = getDB(DB);
+    const success = await updateRecipe(db, parseInt(id), validated);
+
+    if (!success) {
+      return new Response(JSON.stringify({ error: 'Recipe not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error updating recipe:', error);
+    
+    if (error instanceof ZodError) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Validation error', 
+          details: error.issues 
+        }), 
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+    
+    return new Response(JSON.stringify({ error: 'Failed to update recipe' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+};
+
+export const DELETE: APIRoute = async ({ params, locals }) => {
+  const DB = (locals.runtime as any)?.env?.DB as D1Database | undefined;
+  const { id } = params;
+
+  if (!DB) {
+    return new Response(JSON.stringify({ error: 'Database not available' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (!id) {
+    return new Response(JSON.stringify({ error: 'Recipe ID is required' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  try {
+    const db = getDB(DB);
+    const success = await deleteRecipe(db, parseInt(id));
+
+    if (!success) {
+      return new Response(JSON.stringify({ error: 'Recipe not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

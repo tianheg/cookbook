@@ -2,6 +2,11 @@
 
 A recipe management application built with Astro and Cloudflare D1 as the database.
 
+## TODO
+
+- edit each recipe
+- improve style
+
 ## Features
 
 - 📖 Browse recipes with categories and difficulty levels

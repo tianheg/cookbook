@@ -1,5 +1,17 @@
+/// <reference types="astro/client" />
+
 type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
 
 declare namespace App {
-	interface Locals extends Runtime {}
+	interface Locals extends Runtime {
+		runtime: Runtime;
+	}
 }
+
+interface Env {
+	DB: D1Database;
+	// Add other Cloudflare bindings here as needed
+	// ASSETS: Fetcher;
+	// CACHE: KVNamespace;
+}
+
