@@ -27,5 +27,14 @@
 			"binding": "SESSION",
 			"id": "741fd40d7f5e46a2a85429c79caca933"
 		}
-	]
+	],
+	"r2_buckets": [
+		{
+			"binding": "RECIPES_BUCKET",
+			"bucket_name": "cookbook-recipes-img"
+		}
+	],
+	"vars": {
+    "R2_PUBLIC_URL": "https://pub-33f7d9afdf6f48179fa61e9063220bbe.r2.dev"
+  }
 }
