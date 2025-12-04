@@ -1,6 +1,6 @@
 ---
 import type { Recipe } from '../db/schema';
-import { getDifficultyClasses } from '../utils/difficulty';
+import { getDifficultyClasses, getDifficultyLabel } from '../utils/difficulty';
 import { calculateTotalTime } from '../utils/time';
 
 interface Props {
@@ -44,7 +44,7 @@ const totalTime = calculateTotalTime(recipe.prepTime, recipe.cookTime);
   <div class="card-body">
     <h2 class="card-title">{recipe.title}</h2>
     {recipe.description && (
-      <p class="text-sm line-clamp-2">{recipe.description}</p>
+      <p class="text-sm">{recipe.description}</p>
     )}
     <div class="card-actions justify-between items-center mt-4">
       <div class="flex gap-2">

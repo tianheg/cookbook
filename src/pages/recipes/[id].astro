@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import RecipeForm from './_RecipeForm.astro';
 import { RecipeService } from '../../services/recipe-service';
-import { getDifficultyClasses } from '../../utils/difficulty';
+import { getDifficultyClasses, getDifficultyLabel } from '../../utils/difficulty';
 import { calculateTotalTime } from '../../utils/time';
 import { ROUTES } from '../../utils/constants';
 

@@ -17,3 +17,16 @@ export function getDifficultyClasses(difficulty: string): string {
 export function isDifficultyValid(value: any): value is DifficultyLevel {
   return ['easy', 'medium', 'hard'].includes(value);
 }
+
+export function getDifficultyLabel(difficulty: string): string {
+  switch (difficulty) {
+    case 'easy':
+      return '简单';
+    case 'medium':
+      return '中等';
+    case 'hard':
+      return '困难';
+    default:
+      return difficulty;
+  }
+}
