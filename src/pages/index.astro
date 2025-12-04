@@ -15,15 +15,15 @@ if (DB) {
 }
 ---
 
-<Layout title="My Cookbook">
+<Layout title="我的食谱">
 	<div class="container mx-auto px-4 py-8">
 		<div class="flex justify-between items-center mb-8">
-			<h1 class="text-4xl font-bold">My Cookbook</h1>
+			<h1 class="text-4xl font-bold">我的食谱</h1>
 			<a href={ROUTES.recipes.new} class="btn bg-orange-400 hover:bg-orange-500 text-white border-0 shadow-md hover:shadow-lg transition-all gap-2">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 				</svg>
-				Add New Recipe
+				添加新食谱
 			</a>
 		</div>
 
@@ -39,21 +39,21 @@ if (DB) {
 			) : (
 				<div class="text-center py-16">
 					<div class="text-6xl mb-4">🍳</div>
-					<p class="text-xl text-base-content/60 mb-6">No recipes yet</p>
+					<p class="text-xl text-base-content/60 mb-6">还没有食谱</p>
 					<a href={ROUTES.recipes.new} class="btn bg-orange-400 hover:bg-orange-500 text-white border-0 shadow-md hover:shadow-lg transition-all gap-2 btn-lg">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 						</svg>
-						Create Your First Recipe
+						创建你的第一个食谱
 					</a>
 				</div>
 			)}
 		</div>
 
-		<div id="no-results" class="hidden text-center py-16">
-			<div class="text-6xl mb-4">🔍</div>
-			<p class="text-xl text-base-content/60">No recipes found matching your search</p>
-		</div>
+	<div id="no-results" class="hidden text-center py-16">
+		<div class="text-6xl mb-4">🔍</div>
+		<p class="text-xl text-base-content/60">没有找到匹配的食谱</p>
+	</div>
 	</div>
 
 	<script>
@@ -125,7 +125,7 @@ if (DB) {
 											<div class="card-actions justify-between items-center mt-4">
 												<div class="flex gap-2">
 													${recipe.category ? `<span class="badge bg-orange-50 text-orange-600 border-orange-100">${recipe.category}</span>` : ''}
-													${recipe.difficulty ? `<span class="badge ${getDifficultyClasses(recipe.difficulty)}">${recipe.difficulty}</span>` : ''}
+													${recipe.difficulty ? `<span class="badge ${getDifficultyClasses(recipe.difficulty)}">${getDifficultyLabel(recipe.difficulty)}</span>` : ''}
 												</div>
 											</div>
 										</div>
@@ -150,6 +150,19 @@ if (DB) {
 					return 'bg-red-50 text-red-600 border-red-100';
 				default:
 					return '';
+			}
+		}
+
+		function getDifficultyLabel(difficulty) {
+			switch (difficulty) {
+				case 'easy':
+					return '简单';
+				case 'medium':
+					return '中等';
+				case 'hard':
+					return '困难';
+				default:
+					return difficulty;
 			}
 		}
 	</script>
