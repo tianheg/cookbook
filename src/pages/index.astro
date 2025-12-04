@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import RecipeCard from '../components/RecipeCard.astro';
+import SearchForm from '../components/SearchForm.astro';
 import { RecipeService } from '../services/recipe-service';
 import type { Recipe } from '../db/schema';
 import { ROUTES } from '../utils/constants';
@@ -26,23 +27,131 @@ if (DB) {
 			</a>
 		</div>
 
-		{recipes && recipes.length > 0 ? (
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{recipes.map((recipe) => (
-					<RecipeCard recipe={recipe} />
-				))}
-			</div>
-		) : (
-			<div class="text-center py-16">
-				<div class="text-6xl mb-4">🍳</div>
-				<p class="text-xl text-base-content/60 mb-6">No recipes yet</p>
-				<a href={ROUTES.recipes.new} class="btn bg-orange-400 hover:bg-orange-500 text-white border-0 shadow-md hover:shadow-lg transition-all gap-2 btn-lg">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-					</svg>
-					Create Your First Recipe
-				</a>
-			</div>
-		)}
+		<SearchForm />
+
+		<div id="recipe-container">
+			{recipes && recipes.length > 0 ? (
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					{recipes.map((recipe) => (
+						<RecipeCard recipe={recipe} />
+					))}
+				</div>
+			) : (
+				<div class="text-center py-16">
+					<div class="text-6xl mb-4">🍳</div>
+					<p class="text-xl text-base-content/60 mb-6">No recipes yet</p>
+					<a href={ROUTES.recipes.new} class="btn bg-orange-400 hover:bg-orange-500 text-white border-0 shadow-md hover:shadow-lg transition-all gap-2 btn-lg">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+						</svg>
+						Create Your First Recipe
+					</a>
+				</div>
+			)}
+		</div>
+
+		<div id="no-results" class="hidden text-center py-16">
+			<div class="text-6xl mb-4">🔍</div>
+			<p class="text-xl text-base-content/60">No recipes found matching your search</p>
+		</div>
 	</div>
+
+	<script>
+		window.addEventListener('recipe-search', async (event) => {
+			const { query, type, difficulty } = event.detail;
+			const params = new URLSearchParams();
+
+			if (query) {
+				params.append('q', query);
+			}
+			if (type && type !== 'all') {
+				params.append('type', type);
+			}
+			if (difficulty) {
+				params.append('difficulty', difficulty);
+			}
+
+			try {
+				const response = await fetch(`/api/search?${params.toString()}`);
+				const data = await response.json();
+
+				const container = document.getElementById('recipe-container');
+				const noResults = document.getElementById('no-results');
+
+				if (data.success && data.data && data.data.recipes) {
+					const recipes = data.data.recipes;
+
+					if (recipes.length === 0) {
+						container.innerHTML = '';
+						noResults.classList.remove('hidden');
+					} else {
+						noResults.classList.add('hidden');
+						container.innerHTML = `
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+								${recipes.map((recipe) => `
+									<a 
+										href="/recipes/${recipe.id}" 
+										class="card bg-base-100 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] duration-200"
+									>
+										<figure class="h-48 bg-base-200">
+											${recipe.imageUrl ? `
+												<img 
+													src="${recipe.imageUrl}" 
+													alt="${recipe.title}" 
+													class="w-full h-full object-cover" 
+												/>
+											` : `
+												<div class="flex items-center justify-center w-full h-full text-base-content/20">
+													<svg 
+														xmlns="http://www.w3.org/2000/svg" 
+														class="h-20 w-20" 
+														fill="none" 
+														viewBox="0 0 24 24" 
+														stroke="currentColor"
+													>
+														<path 
+															stroke-linecap="round" 
+															stroke-linejoin="round" 
+															stroke-width="2" 
+															d="M12 6v6m0 0v6m0-6h6m-6 0H6" 
+														/>
+													</svg>
+												</div>
+											`}
+										</figure>
+										<div class="card-body">
+											<h2 class="card-title">${recipe.title}</h2>
+											${recipe.description ? `<p class="text-sm line-clamp-2">${recipe.description}</p>` : ''}
+											<div class="card-actions justify-between items-center mt-4">
+												<div class="flex gap-2">
+													${recipe.category ? `<span class="badge bg-orange-50 text-orange-600 border-orange-100">${recipe.category}</span>` : ''}
+													${recipe.difficulty ? `<span class="badge ${getDifficultyClasses(recipe.difficulty)}">${recipe.difficulty}</span>` : ''}
+												</div>
+											</div>
+										</div>
+									</a>
+								`).join('')}
+							</div>
+						`;
+					}
+				}
+			} catch (error) {
+				console.error('Search error:', error);
+			}
+		});
+
+		function getDifficultyClasses(difficulty) {
+			switch (difficulty) {
+				case 'easy':
+					return 'bg-green-50 text-green-600 border-green-100';
+				case 'medium':
+					return 'bg-yellow-50 text-yellow-600 border-yellow-100';
+				case 'hard':
+					return 'bg-red-50 text-red-600 border-red-100';
+				default:
+					return '';
+			}
+		}
+	</script>
 </Layout>
+

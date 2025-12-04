@@ -1,4 +1,4 @@
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, or, like } from 'drizzle-orm';
 import type { DB } from './client';
 import { recipes, ingredients, instructions } from './schema';
 import type {
@@ -194,4 +194,114 @@ export async function getCategories(db: DB): Promise<string[]> {
   return result
     .map((r) => r.category)
     .filter((c): c is string => c !== null && c !== '');
+}
+
+// Search recipes by query string
+export async function searchRecipes(
+  db: DB,
+  query: string,
+  filters?: { category?: string; difficulty?: string }
+): Promise<Recipe[]> {
+  if (!query || query.trim() === '') {
+    return getRecipes(db, filters);
+  }
+
+  const searchTerm = `%${query}%`;
+  const conditions: any[] = [];
+
+  // Search in title, description, difficulty, and category
+  conditions.push(
+    or(
+      like(recipes.title, searchTerm),
+      like(recipes.description, searchTerm),
+      like(recipes.category, searchTerm),
+      like(recipes.difficulty, searchTerm)
+    )
+  );
+
+  // Add category and difficulty filters if provided
+  if (filters?.category) {
+    conditions.push(eq(recipes.category, filters.category));
+  }
+  if (filters?.difficulty) {
+    conditions.push(eq(recipes.difficulty, filters.difficulty as 'easy' | 'medium' | 'hard'));
+  }
+
+  let query_builder = db.select().from(recipes);
+
+  if (conditions.length > 0) {
+    query_builder = query_builder.where(and(...conditions));
+  }
+
+  return query_builder.orderBy(desc(recipes.createdAt));
+}
+
+// Search recipes by ingredients
+export async function searchRecipesByIngredients(
+  db: DB,
+  ingredientQuery: string
+): Promise<Recipe[]> {
+  if (!ingredientQuery || ingredientQuery.trim() === '') {
+    return [];
+  }
+
+  const searchTerm = `%${ingredientQuery}%`;
+
+  // First find ingredients matching the query
+  const matchingIngredients = await db
+    .selectDistinct({ recipeId: ingredients.recipeId })
+    .from(ingredients)
+    .where(like(ingredients.name, searchTerm));
+
+  if (matchingIngredients.length === 0) {
+    return [];
+  }
+
+  const recipeIds = matchingIngredients.map((ing) => ing.recipeId);
+
+  // Then fetch all recipes with those ingredient IDs
+  const result: Recipe[] = [];
+  for (const recipeId of recipeIds) {
+    const recipe = await getRecipeById(db, recipeId);
+    if (recipe) {
+      result.push(recipe);
+    }
+  }
+
+  return result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+// Search recipes by instructions
+export async function searchRecipesByInstructions(
+  db: DB,
+  instructionQuery: string
+): Promise<Recipe[]> {
+  if (!instructionQuery || instructionQuery.trim() === '') {
+    return [];
+  }
+
+  const searchTerm = `%${instructionQuery}%`;
+
+  // First find instructions matching the query
+  const matchingInstructions = await db
+    .selectDistinct({ recipeId: instructions.recipeId })
+    .from(instructions)
+    .where(like(instructions.instruction, searchTerm));
+
+  if (matchingInstructions.length === 0) {
+    return [];
+  }
+
+  const recipeIds = matchingInstructions.map((inst) => inst.recipeId);
+
+  // Then fetch all recipes with those instruction IDs
+  const result: Recipe[] = [];
+  for (const recipeId of recipeIds) {
+    const recipe = await getRecipeById(db, recipeId);
+    if (recipe) {
+      result.push(recipe);
+    }
+  }
+
+  return result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }

@@ -1,0 +1,141 @@
+---
+interface Props {
+  onSearch?: (query: string, type: string) => void;
+}
+---
+
+<div class="w-full mb-6">
+  <div class="form-control">
+    <div class="input-group w-full">
+      <input 
+        type="text" 
+        id="search-input"
+        placeholder="搜索菜谱（菜名、描述、配料、步骤...）" 
+        class="input input-bordered flex-1" 
+      />
+      <select id="search-type" class="select select-bordered">
+        <option value="all">全部</option>
+        <option value="ingredients">配料</option>
+        <option value="instructions">步骤</option>
+      </select>
+      <button 
+        id="search-btn"
+        class="btn btn-square bg-orange-400 hover:bg-orange-500 text-white border-0"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <div class="mt-3 flex gap-2 flex-wrap">
+    <button 
+      class="btn btn-sm btn-outline difficulty-filter" 
+      data-difficulty="easy"
+    >
+      简单
+    </button>
+    <button 
+      class="btn btn-sm btn-outline difficulty-filter" 
+      data-difficulty="medium"
+    >
+      中等
+    </button>
+    <button 
+      class="btn btn-sm btn-outline difficulty-filter" 
+      data-difficulty="hard"
+    >
+      困难
+    </button>
+    <button 
+      class="btn btn-sm btn-outline"
+      id="clear-filters"
+    >
+      清除筛选
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  // Store selected filters
+  let selectedDifficulty = null;
+  let selectedSearchType = 'all';
+
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+  const searchType = document.getElementById('search-type');
+  const difficultyButtons = document.querySelectorAll('.difficulty-filter');
+  const clearBtn = document.getElementById('clear-filters');
+
+  function performSearch() {
+    const query = searchInput.value.trim();
+    const params = new URLSearchParams();
+    
+    if (query) {
+      params.append('q', query);
+    }
+    if (selectedSearchType !== 'all') {
+      params.append('type', selectedSearchType);
+    }
+    if (selectedDifficulty) {
+      params.append('difficulty', selectedDifficulty);
+    }
+
+    // Dispatch custom event to parent
+    window.dispatchEvent(
+      new CustomEvent('recipe-search', {
+        detail: { query, type: selectedSearchType, difficulty: selectedDifficulty }
+      })
+    );
+  }
+
+  // Handle search button click
+  searchBtn.addEventListener('click', function() {
+    performSearch();
+  });
+
+  // Handle Enter key in search input
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      performSearch();
+    }
+  });
+
+  // Handle search type change
+  searchType.addEventListener('change', function(e) {
+    selectedSearchType = e.target.value;
+    performSearch();
+  });
+
+  // Handle difficulty filter
+  difficultyButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const difficulty = btn.getAttribute('data-difficulty');
+      if (selectedDifficulty === difficulty) {
+        selectedDifficulty = null;
+        btn.classList.remove('btn-active');
+      } else {
+        // Remove active class from all buttons
+        difficultyButtons.forEach(function(b) {
+          b.classList.remove('btn-active');
+        });
+        selectedDifficulty = difficulty;
+        btn.classList.add('btn-active');
+      }
+      performSearch();
+    });
+  });
+
+  // Handle clear filters
+  clearBtn.addEventListener('click', function() {
+    searchInput.value = '';
+    selectedDifficulty = null;
+    selectedSearchType = 'all';
+    searchType.value = 'all';
+    difficultyButtons.forEach(function(btn) {
+      btn.classList.remove('btn-active');
+    });
+    performSearch();
+  });
+</script>

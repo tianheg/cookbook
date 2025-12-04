@@ -10,6 +10,9 @@ import {
   createRecipe,
   updateRecipe,
   deleteRecipe,
+  searchRecipes,
+  searchRecipesByIngredients,
+  searchRecipesByInstructions,
 } from '../db/queries';
 import type { CreateRecipeInput, UpdateRecipeInput, RecipeWithDetails } from '../db/schema';
 
@@ -42,5 +45,17 @@ export class RecipeService {
 
   async deleteRecipe(id: number) {
     return deleteRecipe(this.db, id);
+  }
+
+  async searchRecipes(query: string, filters?: { category?: string; difficulty?: string }) {
+    return searchRecipes(this.db, query, filters);
+  }
+
+  async searchByIngredients(query: string) {
+    return searchRecipesByIngredients(this.db, query);
+  }
+
+  async searchByInstructions(query: string) {
+    return searchRecipesByInstructions(this.db, query);
   }
 }
