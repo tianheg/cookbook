@@ -1,12 +1,14 @@
 ---
 import type { Recipe } from '../db/schema';
+import { getDifficultyClasses } from '../utils/difficulty';
+import { calculateTotalTime } from '../utils/time';
 
 interface Props {
   recipe: Recipe;
 }
 
 const { recipe } = Astro.props;
-const totalTime = (recipe.prepTime || 0) + (recipe.cookTime || 0);
+const totalTime = calculateTotalTime(recipe.prepTime, recipe.cookTime);
 ---
 
 <a 
@@ -50,13 +52,7 @@ const totalTime = (recipe.prepTime || 0) + (recipe.cookTime || 0);
           <span class="badge bg-orange-50 text-orange-600 border-orange-100">{recipe.category}</span>
         )}
         {recipe.difficulty && (
-          <span 
-            class={`badge ${
-              recipe.difficulty === 'easy' ? 'bg-green-100 text-green-700 border-green-200' :
-              recipe.difficulty === 'medium' ? 'bg-amber-100 text-amber-700 border-amber-200' :
-              'bg-rose-100 text-rose-700 border-rose-200'
-            }`}
-          >
+          <span class={`badge ${getDifficultyClasses(recipe.difficulty)}`}>
             {recipe.difficulty}
           </span>
         )}
