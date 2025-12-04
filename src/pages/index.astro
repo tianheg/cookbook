@@ -18,7 +18,10 @@ if (DB) {
 	<div class="container mx-auto px-4 py-8">
 		<div class="flex justify-between items-center mb-8">
 			<h1 class="text-4xl font-bold">My Cookbook</h1>
-			<a href="/recipes/new" class="btn btn-primary">
+			<a href="/recipes/new" class="btn bg-orange-400 hover:bg-orange-500 text-white border-0 shadow-md hover:shadow-lg transition-all gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+				</svg>
 				Add New Recipe
 			</a>
 		</div>
@@ -31,8 +34,12 @@ if (DB) {
 			</div>
 		) : (
 			<div class="text-center py-16">
-				<p class="text-xl text-base-content/60 mb-4">No recipes yet</p>
-				<a href="/recipes/new" class="btn btn-primary">
+				<div class="text-6xl mb-4">🍳</div>
+				<p class="text-xl text-base-content/60 mb-6">No recipes yet</p>
+				<a href="/recipes/new" class="btn bg-orange-400 hover:bg-orange-500 text-white border-0 shadow-md hover:shadow-lg transition-all gap-2 btn-lg">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+					</svg>
 					Create Your First Recipe
 				</a>
 			</div>

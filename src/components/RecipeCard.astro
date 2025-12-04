@@ -11,7 +11,7 @@ const totalTime = (recipe.prepTime || 0) + (recipe.cookTime || 0);
 
 <a 
   href={`/recipes/${recipe.id}`} 
-  class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow"
+  class="card bg-base-100 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] duration-200"
 >
   <figure class="h-48 bg-base-200">
     {recipe.imageUrl ? (
@@ -47,14 +47,14 @@ const totalTime = (recipe.prepTime || 0) + (recipe.cookTime || 0);
     <div class="card-actions justify-between items-center mt-4">
       <div class="flex gap-2">
         {recipe.category && (
-          <span class="badge badge-outline">{recipe.category}</span>
+          <span class="badge bg-orange-50 text-orange-600 border-orange-100">{recipe.category}</span>
         )}
         {recipe.difficulty && (
           <span 
             class={`badge ${
-              recipe.difficulty === 'easy' ? 'badge-success' :
-              recipe.difficulty === 'medium' ? 'badge-warning' :
-              'badge-error'
+              recipe.difficulty === 'easy' ? 'bg-green-100 text-green-700 border-green-200' :
+              recipe.difficulty === 'medium' ? 'bg-amber-100 text-amber-700 border-amber-200' :
+              'bg-rose-100 text-rose-700 border-rose-200'
             }`}
           >
             {recipe.difficulty}

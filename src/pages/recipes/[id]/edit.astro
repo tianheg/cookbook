@@ -21,136 +21,199 @@ const difficulties = ['easy', 'medium', 'hard'];
 ---
 
 <Layout title={`Edit ${recipe.title}`}>
-	<div class="min-h-screen bg-base-200">
-		<div class="container mx-auto px-4 py-8 max-w-4xl">
-			<div class="mb-6">
-				<a href={`/recipes/${id}`} class="btn btn-ghost btn-sm">
-					← Back to Recipe
+	<div class="min-h-screen bg-base-100 relative overflow-hidden">
+		<div class="container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-5xl relative z-10">
+			<!-- Header -->
+			<div class="mb-4 sm:mb-8">
+				<a href={`/recipes/${id}`} class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-base-200 hover:bg-base-300 shadow-sm hover:shadow-md transition-all duration-300 group border border-base-300">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+					</svg>
+					<span class="text-sm font-medium text-base-content">Back to Recipe</span>
 				</a>
 			</div>
 
-			<div class="card bg-base-100 shadow-xl">
-				<div class="card-body">
-					<div class="flex items-center gap-4 mb-6">
+			<!-- Main Form Card -->
+			<div class="card bg-base-100 shadow-2xl border border-base-300 hover:shadow-3xl transition-shadow duration-500">
+				<div class="card-body p-4 sm:p-6 md:p-10">
+					<!-- Page Header -->
+					<div class="flex items-center gap-3 sm:gap-6 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b-2 border-base-300">
 						<div class="avatar placeholder">
-							<div class="bg-accent text-accent-content rounded-full w-16">
-								<span class="text-2xl">✏️</span>
+							<div class="bg-gradient-to-br from-primary to-accent text-base-100 rounded-2xl sm:rounded-3xl w-16 h-16 sm:w-24 sm:h-24 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center">
+								<span class="text-3xl sm:text-4xl">✏️</span>
 							</div>
 						</div>
-						<div>
-							<h1 class="text-3xl font-bold">Edit Recipe</h1>
-							<p class="text-base-content/70">Update {recipe.title}</p>
+						<div class="flex-1">
+							<h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary leading-tight mb-2">Edit Recipe</h1>
+							<p class="text-base-content/70 text-sm sm:text-base md:text-lg font-medium">Update your delicious recipe 📝</p>
 						</div>
 					</div>
 
 					<form id="recipe-form" class="space-y-6">
-						<div class="form-control">
-							<label class="label">
-								<span class="label-text">Recipe Title</span>
-							</label>
-							<input
-								type="text"
-								name="title"
-								placeholder="e.g., Spaghetti Carbonara"
-								class="input input-bordered"
-								value={recipe.title}
-								required
-								id="recipe-title"
-							/>
-						</div>
-
-						<div class="form-control">
-							<label class="label">
-								<span class="label-text">Description</span>
-							</label>
-							<textarea
-								name="description"
-								placeholder="Brief description of your recipe"
-								class="textarea textarea-bordered"
-								rows="2"
-							>{recipe.description}</textarea>
-						</div>						<div class="card bg-base-200/50">
-							<div class="card-body">
-								<h3 class="card-title text-base">Recipe Details</h3>
-								<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-									<div class="form-control">
-										<label class="label">
-											<span class="label-text">Prep Time (min)</span>
-										</label>
-										<input
-											type="number"
-											name="prepTime"
-											placeholder="15"
-											class="input input-bordered"
-											value={recipe.prepTime}
-										/>
-									</div>
-
-									<div class="form-control">
-										<label class="label">
-											<span class="label-text">Cook Time (min)</span>
-										</label>
-										<input
-											type="number"
-											name="cookTime"
-											placeholder="30"
-											class="input input-bordered"
-											value={recipe.cookTime}
-										/>
-									</div>
-
-									<div class="form-control">
-										<label class="label">
-											<span class="label-text">Servings</span>
-										</label>
-										<input
-											type="number"
-											name="servings"
-											placeholder="4"
-											class="input input-bordered"
-											value={recipe.servings}
-										/>
-									</div>
-
-									<div class="form-control">
-										<label class="label">
-											<span class="label-text">Difficulty</span>
-										</label>
-										<select name="difficulty" class="select select-bordered">
-											<option value="">Select...</option>
-											{difficulties.map(diff => (
-												<option value={diff} selected={recipe.difficulty === diff}>{diff}</option>
-											))}
-										</select>
-									</div>
+						<!-- Basic Info Section -->
+						<div class="space-y-5">
+							<div class="flex items-center gap-3 mb-6">
+								<div class="p-2 bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl">
+									<span class="text-2xl sm:text-3xl">📋</span>
 								</div>
+								<h2 class="text-xl sm:text-2xl font-bold text-base-content">Basic Information</h2>
+							</div>
+							
+							<div class="form-control">
+								<label class="label">
+									<span class="label-text font-semibold text-base text-base-content flex items-center gap-2">
+										Recipe Title
+										<span class="badge badge-sm bg-orange-100 text-orange-600 border-0">Required</span>
+									</span>
+								</label>
+								<input
+									type="text"
+									name="title"
+									placeholder="e.g., Spaghetti Carbonara"
+									class="input input-bordered input-md sm:input-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all border-orange-200 hover:border-orange-300 bg-base-100 text-base-content"
+									value={recipe.title}
+									required
+									id="recipe-title"
+								/>
+							</div>
+
+							<div class="form-control">
+								<label class="label">
+									<span class="label-text font-semibold text-base text-base-content">Description</span>
+									<span class="label-text-alt text-base-content/50">Optional</span>
+								</label>
+								<textarea
+									name="description"
+									placeholder="Tell us about this amazing dish... What makes it special?"
+									class="textarea textarea-bordered textarea-md sm:textarea-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all min-h-[100px] sm:min-h-[120px] border-orange-200 hover:border-orange-300 bg-base-100 text-base-content resize-none"
+									rows="4"
+								>{recipe.description}</textarea>
 							</div>
 						</div>
 
-						<div class="form-control">
-							<label class="label">
-								<span class="label-text">Category</span>
-							</label>
-							<input
-								type="text"
-								name="category"
-								placeholder="e.g., Italian, Dessert, Indian"
-								class="input input-bordered"
-								value={recipe.category}
-							/>
+						<div class="divider my-8">
+							<div class="w-2 h-2 rounded-full bg-orange-300"></div>
 						</div>
 
-						<div class="form-control">
-							<label class="label">
-								<span class="label-text">Recipe Image</span>
-							</label>
-							<div class="flex gap-4">
-								<div class="flex-1">
-									<label class="input input-bordered flex items-center gap-2 cursor-pointer hover:bg-base-200">
-										<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-										</svg>
-										<span class="text-sm">Upload Image (JPEG, PNG, WebP)</span>
+						<!-- Recipe Details -->
+						<div class="space-y-5">
+							<div class="flex items-center gap-3 mb-6">
+								<div class="p-2 bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl">
+									<span class="text-2xl sm:text-3xl">⏱️</span>
+								</div>
+								<h2 class="text-xl sm:text-2xl font-bold text-base-content">Recipe Details</h2>
+							</div>
+							
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+								<div class="form-control">
+									<label class="label">
+										<span class="label-text font-semibold text-sm text-base-content flex items-center gap-1.5">
+											<span>⏲️</span> Prep Time (min)
+										</span>
+									</label>
+									<input
+										type="number"
+										name="prepTime"
+										placeholder="15"
+										class="input input-bordered focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all border-orange-200 hover:border-orange-300 bg-base-100 text-base-content"
+										value={recipe.prepTime}
+										min="0"
+									/>
+								</div>
+
+								<div class="form-control">
+									<label class="label">
+										<span class="label-text font-semibold text-sm text-base-content flex items-center gap-1.5">
+											<span>🍳</span> Cook Time (min)
+										</span>
+									</label>
+									<input
+										type="number"
+										name="cookTime"
+										placeholder="30"
+										class="input input-bordered focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all border-orange-200 hover:border-orange-300 bg-base-100 text-base-content"
+										value={recipe.cookTime}
+										min="0"
+									/>
+								</div>
+
+								<div class="form-control">
+									<label class="label">
+										<span class="label-text font-semibold text-sm text-base-content flex items-center gap-1.5">
+											<span>🍽️</span> Servings
+										</span>
+									</label>
+									<input
+										type="number"
+										name="servings"
+										placeholder="4"
+										class="input input-bordered focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all border-orange-200 hover:border-orange-300 bg-base-100 text-base-content"
+										value={recipe.servings}
+										min="1"
+									/>
+								</div>
+
+								<div class="form-control">
+									<label class="label">
+										<span class="label-text font-semibold text-sm text-base-content flex items-center gap-1.5">
+											<span>📊</span> Difficulty
+										</span>
+									</label>
+									<select name="difficulty" class="select select-bordered focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all border-orange-200 hover:border-orange-300 bg-base-100 text-base-content">
+										<option value="">Select...</option>
+										{difficulties.map(diff => (
+											<option value={diff} selected={recipe.difficulty === diff}>
+												{diff.charAt(0).toUpperCase() + diff.slice(1)}
+											</option>
+										))}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-control">
+								<label class="label">
+									<span class="label-text font-semibold text-sm text-base-content flex items-center gap-1.5">
+										<span>🏷️</span> Category
+									</span>
+								</label>
+								<input
+									type="text"
+									name="category"
+									placeholder="e.g., Italian, Dessert, Vegetarian"
+									class="input input-bordered focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all border-orange-200 hover:border-orange-300 bg-base-100 text-base-content"
+									value={recipe.category || ''}
+								/>
+							</div>
+						</div>
+
+						<div class="divider my-8">
+							<div class="w-2 h-2 rounded-full bg-orange-300"></div>
+						</div>
+
+						<!-- Image Upload Section -->
+						<div class="space-y-5">
+							<div class="flex items-center gap-3 mb-6">
+								<div class="p-2 bg-gradient-to-br from-orange-100 to-amber-100 rounded-xl">
+									<span class="text-2xl sm:text-3xl">🖼️</span>
+								</div>
+								<h2 class="text-xl sm:text-2xl font-bold text-base-content">Recipe Image</h2>
+							</div>
+							
+							<div class="flex flex-col md:flex-row gap-6 items-start">
+								<div class="flex-1 w-full">
+									<label for="imageFile" class="relative flex flex-col items-center justify-center border-2 border-dashed border-orange-300 rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:border-orange-400 hover:bg-orange-50/50 group bg-base-100 dark:hover:bg-base-200/50">
+										<div class="absolute inset-0 bg-gradient-to-br from-orange-400/0 to-amber-400/0 group-hover:from-orange-400/5 group-hover:to-amber-400/5 rounded-2xl transition-all duration-300"></div>
+										<div class="relative z-10 flex flex-col items-center gap-3">
+											<div class="p-4 bg-orange-100 rounded-full group-hover:bg-orange-200 transition-colors">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-orange-500 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+												</svg>
+											</div>
+											<div class="text-center">
+												<p class="font-semibold text-base text-base-content group-hover:text-orange-600 transition-colors">Drop your image here or click to browse</p>
+												<p class="text-sm text-base-content/60 mt-1">JPEG, PNG, WebP • Max 5MB</p>
+											</div>
+										</div>
 										<input
 											type="file"
 											name="imageFile"
@@ -159,124 +222,148 @@ const difficulties = ['easy', 'medium', 'hard'];
 											class="hidden"
 										/>
 									</label>
-									<p class="text-xs text-base-content/60 mt-1">Max 5MB</p>
-									<div id="upload-status" class="text-xs mt-2"></div>
+									<div id="upload-status" class="text-sm mt-4 text-center font-medium"></div>
 								</div>
-								<div id="image-preview" class="w-20 h-20 rounded-lg bg-base-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
-									{recipe.imageUrl ? (
-										<img src={recipe.imageUrl} alt="Recipe preview" class="w-full h-full object-cover" />
-									) : (
-										<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-										</svg>
-									)}
-								</div>
-							</div>
-						</div>
-
-						<div class="divider"></div>
-
-						<div class="card bg-base-200/50">
-							<div class="card-body">
-								<div class="flex justify-between items-center mb-4">
-									<h3 class="card-title text-base">
-										🥘 Ingredients
-										<span class="badge badge-ghost" id="ingredient-count">{recipe.ingredients.length}</span>
-									</h3>
-									<button type="button" id="add-ingredient" class="btn btn-accent btn-sm">
-										+ Add Ingredient
-									</button>
-								</div>
-						<div id="ingredients-list" class="space-y-3">
-							{recipe.ingredients.map((ingredient) => (
-								<div class="ingredient-row grid grid-cols-12 gap-2 items-center p-3 bg-base-100 rounded-lg">
-									<input 
-										type="text" 
-										placeholder="Ingredient name" 
-										class="input input-bordered input-sm col-span-5" 
-										name="ingredient-name[]"
-										value={ingredient.name}
-										required
-									/>
-									<input 
-										type="text" 
-										placeholder="Amount" 
-										class="input input-bordered input-sm col-span-3" 
-										name="ingredient-amount[]"
-										value={ingredient.amount}
-										required
-									/>
-									<input 
-										type="text" 
-										placeholder="Unit" 
-										class="input input-bordered input-sm col-span-3" 
-										name="ingredient-unit[]"
-										value={ingredient.unit || ''}
-									/>
-									<button type="button" class="btn btn-ghost btn-sm btn-circle col-span-1 remove-ingredient">
-										<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-										</svg>
-									</button>
-								</div>
-							))}
-						</div>
-					</div>
-				</div>
-
-						<div class="divider"></div>
-
-						<div class="card bg-base-200/50">
-							<div class="card-body">
-								<div class="flex justify-between items-center mb-4">
-									<h3 class="card-title text-base">
-										📝 Instructions
-										<span class="badge badge-ghost" id="instruction-count">{recipe.instructions.length} step{recipe.instructions.length !== 1 ? 's' : ''}</span>
-									</h3>
-									<button type="button" id="add-instruction" class="btn btn-accent btn-sm">
-										+ Add Step
-									</button>
-								</div>
-						<div id="instructions-list" class="space-y-3">
-							{recipe.instructions.map((instruction) => (
-								<div class="instruction-row flex gap-3 p-3 bg-base-100 rounded-lg">
-									<span class="badge badge-primary badge-lg flex-shrink-0">{instruction.stepNumber}</span>
-									<textarea 
-										placeholder="Describe this step in detail..." 
-										class="textarea textarea-bordered flex-1" 
-										name="instruction[]"
-										rows="2"
-										required
-									>{instruction.instruction}</textarea>
-									<button type="button" class="btn btn-ghost btn-sm btn-circle flex-shrink-0 remove-instruction">
-										<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-										</svg>
-									</button>
-								</div>
-							))}
-						</div>
-					</div>
-				</div>
-
-						<div class="divider"></div>
-
-						<div class="sticky bottom-4 pt-4">
-							<div class="card bg-base-100 shadow-xl">
-								<div class="card-body p-4">
-									<div class="flex gap-3">
-										<button type="submit" class="btn btn-primary flex-1 btn-lg gap-2">
-											<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+								
+								<div class="flex flex-col items-center gap-3">
+									<div id="image-preview" class="w-36 h-36 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 flex items-center justify-center overflow-hidden shadow-lg transition-all hover:shadow-xl hover:scale-105 duration-300">
+										{recipe.imageUrl ? (
+											<img src={recipe.imageUrl} alt="Recipe preview" class="w-full h-full object-cover" />
+										) : (
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 											</svg>
-											Update Recipe
-										</button>
-										<a href={`/recipes/${id}`} class="btn btn-ghost btn-lg">
-											Cancel
-										</a>
+										)}
 									</div>
+									<span class="text-xs text-base-content/60 font-medium">Preview</span>
 								</div>
 							</div>
+						</div>
+
+						<div class="divider my-8">
+							<div class="w-2 h-2 rounded-full bg-orange-300"></div>
+					</div>
+
+			<!-- Ingredients Section -->
+			<div class="space-y-4">
+				<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-6">
+						<div class="flex items-center gap-3">
+							<span class="text-2xl sm:text-3xl">🥘</span>
+							<h2 class="text-xl sm:text-2xl font-bold text-base-content">Ingredients</h2>
+									<span class="badge bg-gradient-to-r from-amber-500 to-amber-600 text-white badge-md sm:badge-lg shadow-md font-semibold" id="ingredient-count">{recipe.ingredients.length}</span>
+								</div>
+								<button type="button" id="add-ingredient" class="btn bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white border-0 btn-sm gap-2 shadow-md hover:shadow-lg transition-all hover:scale-105 w-full sm:w-auto">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+									</svg>
+									Add Ingredient
+								</button>
+							</div>
+							
+							<div id="ingredients-list" class="space-y-2">
+								{recipe.ingredients.map((ingredient, index) => (
+									<div class="ingredient-row bg-base-100 rounded-lg p-3 sm:p-4 shadow-xs hover:shadow-sm transition-all border-l-4 border-amber-400">
+										<div class="grid grid-cols-12 gap-3 items-center">
+										<div class="col-span-12 sm:col-span-5">
+										<input 
+											type="text" 
+											placeholder="Ingredient name *" 
+											class="input input-bordered input-sm w-full focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all border-amber-200 hover:border-amber-300 bg-base-100 text-base-content" 
+											name="ingredient-name[]"
+												value={ingredient.name}
+												required
+											/>
+											</div>
+										<div class="col-span-5 sm:col-span-3">
+										<input 
+											type="text" 
+											placeholder="Amount *" 
+											class="input input-bordered input-sm w-full focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all border-amber-200 hover:border-amber-300 bg-base-100 text-base-content" 
+											name="ingredient-amount[]"
+												value={ingredient.amount}
+												required
+											/>
+											</div>
+										<div class="col-span-5 sm:col-span-3">
+										<input 
+											type="text" 
+											placeholder="Unit" 
+											class="input input-bordered input-sm w-full focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all border-amber-200 hover:border-amber-300 bg-base-100 text-base-content" 
+											name="ingredient-unit[]"
+												value={ingredient.unit || ''}
+											/>
+											</div>
+											<div class="col-span-2 sm:col-span-1 flex justify-center">
+												<button type="button" class="btn btn-ghost btn-sm btn-circle hover:btn-error transition-all remove-ingredient">
+													<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+													</svg>
+												</button>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+
+						<div class="divider my-8">
+							<div class="w-2 h-2 rounded-full bg-orange-300"></div>
+						</div>
+
+			<!-- Instructions Section -->
+			<div class="space-y-4">
+				<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-6">
+						<div class="flex items-center gap-3">
+							<span class="text-2xl sm:text-3xl">📝</span>
+							<h2 class="text-xl sm:text-2xl font-bold text-base-content">Instructions</h2>
+									<span class="badge bg-gradient-to-r from-orange-500 to-orange-600 text-white badge-md sm:badge-lg shadow-md font-semibold" id="instruction-count">{recipe.instructions.length} step{recipe.instructions.length !== 1 ? 's' : ''}</span>
+								</div>
+								<button type="button" id="add-instruction" class="btn bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white border-0 btn-sm gap-2 shadow-md hover:shadow-lg transition-all hover:scale-105 w-full sm:w-auto">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+									</svg>
+									Add Step
+								</button>
+							</div>
+							
+							<div id="instructions-list" class="space-y-2">
+								{recipe.instructions.map((instruction) => (
+									<div class="instruction-row rounded-lg p-3 sm:p-4 shadow-xs hover:shadow-sm transition-all border-l-4 border-orange-400">
+										<div class="flex gap-4 items-start">
+											<div class="badge badge-lg h-10 w-10 bg-orange-100 text-orange-600 flex-shrink-0 text-base font-bold border-0">{instruction.stepNumber}</div>
+										<textarea 
+											placeholder="Describe this step in detail..." 
+											class="textarea textarea-bordered flex-1 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all min-h-[100px] border-orange-200 hover:border-orange-300 bg-base-100 text-base-content resize-none" 
+											name="instruction[]"
+												rows="3"
+												required
+											>{instruction.instruction}</textarea>
+											<button type="button" class="btn btn-ghost btn-sm btn-circle flex-shrink-0 hover:btn-error transition-all remove-instruction">
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+												</svg>
+											</button>
+										</div>
+									</div>
+								))}
+							</div>
+						</div>
+
+						<div class="divider my-8">
+							<div class="w-2 h-2 rounded-full bg-orange-300"></div>
+						</div>
+
+						<!-- Action Buttons -->
+						<div class="flex flex-col sm:flex-row gap-3 sm:gap-4 sticky bottom-3 sm:bottom-6 bg-gradient-to-r from-white via-orange-50/30 to-amber-50/30 p-5 sm:p-6 rounded-2xl shadow-2xl border-2 border-orange-200/60 backdrop-blur-sm">
+							<button type="submit" class="btn bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white border-0 flex-1 btn-md sm:btn-lg gap-2 sm:gap-3 shadow-lg hover:shadow-2xl transition-all hover:scale-[1.02] font-semibold">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+								</svg>
+								Update Recipe
+							</button>
+							<a href={`/recipes/${id}`} class="btn btn-ghost btn-md sm:btn-lg hover:bg-orange-100/50 transition-all">
+								Cancel
+			</a>
 						</div>
 					</form>
 				</div>
@@ -304,10 +391,10 @@ const difficulties = ['easy', 'medium', 'hard'];
 
 	// Handle image file upload
 	document.getElementById('imageFile')?.addEventListener('change', async (e) => {
-		const input = e.target;
+		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
 		const statusEl = document.getElementById('upload-status');
-		const previewEl = document.getElementById('image-preview');
+		const previewEl = document.getElementById('image-preview') as HTMLElement;
 
 		if (!file) return;
 
@@ -315,21 +402,24 @@ const difficulties = ['easy', 'medium', 'hard'];
 		const reader = new FileReader();
 		reader.onload = (event) => {
 			const img = document.createElement('img');
-			img.src = event.target.result;
-			img.className = 'w-full h-full object-cover';
-			previewEl.innerHTML = '';
-			previewEl.appendChild(img);
+			const result = event.target?.result as string;
+			img.src = result;
+			img.className = 'w-full h-full object-cover rounded-2xl';
+			if (previewEl) {
+				previewEl.innerHTML = '';
+				previewEl.appendChild(img);
+			}
 		};
 		reader.readAsDataURL(file);
 
 		// Show uploading status
 		if (statusEl) {
-			statusEl.textContent = 'Uploading...';
-			statusEl.className = 'text-xs text-info';
+			statusEl.textContent = '⏳ Uploading...';
+			statusEl.className = 'text-sm text-info font-medium';
 		}
 
 		try {
-			const titleInput = document.getElementById('recipe-title');
+			const titleInput = document.getElementById('recipe-title') as HTMLInputElement;
 			const recipeName = titleInput?.value || 'recipe';
 			const uploadFormData = new FormData();
 			uploadFormData.append('file', file);
@@ -341,31 +431,32 @@ const difficulties = ['easy', 'medium', 'hard'];
 			});
 
 			if (!response.ok) {
-				const error = await response.json();
+				const error = await response.json() as { error: string };
 				throw new Error(error.error);
 			}
 
-			const result = await response.json();
+			const result = await response.json() as { imageUrl: string };
 			// Store the image URL in a hidden field for form submission
-			let imageUrlInput = document.querySelector('input[name="imageUrl"]');
+			let imageUrlInput = document.querySelector('input[name="imageUrl"]') as HTMLInputElement;
 			if (!imageUrlInput) {
-				imageUrlInput = document.createElement('input');
+				imageUrlInput = document.createElement('input') as HTMLInputElement;
 				imageUrlInput.type = 'hidden';
 				imageUrlInput.name = 'imageUrl';
-				document.getElementById('recipe-form').appendChild(imageUrlInput);
+				const form = document.getElementById('recipe-form');
+				if (form) form.appendChild(imageUrlInput);
 			}
 			imageUrlInput.value = result.imageUrl;
 
 			if (statusEl) {
-				statusEl.textContent = 'Upload complete!';
-				statusEl.className = 'text-xs text-success';
+				statusEl.textContent = '✅ Upload complete!';
+				statusEl.className = 'text-sm text-success font-semibold';
 			}
 		} catch (error) {
 			console.error('Upload failed:', error);
 			const message = error instanceof Error ? error.message : 'Upload failed';
 			if (statusEl) {
-				statusEl.textContent = `Error: ${message}`;
-				statusEl.className = 'text-xs text-error';
+				statusEl.textContent = `❌ Error: ${message}`;
+				statusEl.className = 'text-sm text-error font-medium';
 			}
 		}
 	});
@@ -374,15 +465,25 @@ const difficulties = ['easy', 'medium', 'hard'];
 	document.getElementById('add-ingredient')?.addEventListener('click', () => {
 		const list = document.getElementById('ingredients-list');
 		const template = `
-			<div class="ingredient-row grid grid-cols-12 gap-2 items-center p-3 bg-base-100 rounded-lg">
-				<input type="text" placeholder="Ingredient name" class="input input-bordered input-sm col-span-5" name="ingredient-name[]" required />
-				<input type="text" placeholder="Amount" class="input input-bordered input-sm col-span-3" name="ingredient-amount[]" required />
-				<input type="text" placeholder="Unit" class="input input-bordered input-sm col-span-3" name="ingredient-unit[]" />
-				<button type="button" class="btn btn-ghost btn-sm btn-circle col-span-1 remove-ingredient">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-					</svg>
-				</button>
+			<div class="ingredient-row bg-base-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all border-2 border-amber-100 hover:border-amber-200">
+				<div class="grid grid-cols-12 gap-3 items-center">
+					<div class="col-span-12 sm:col-span-5">
+						<input type="text" placeholder="Ingredient name *" class="input input-bordered input-sm w-full focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all border-amber-200 hover:border-amber-300 bg-base-100 text-base-content" name="ingredient-name[]" required />
+					</div>
+					<div class="col-span-5 sm:col-span-3">
+						<input type="text" placeholder="Amount *" class="input input-bordered input-sm w-full focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all border-amber-200 hover:border-amber-300 bg-base-100 text-base-content" name="ingredient-amount[]" required />
+					</div>
+					<div class="col-span-5 sm:col-span-3">
+						<input type="text" placeholder="Unit" class="input input-bordered input-sm w-full focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all border-amber-200 hover:border-amber-300 bg-base-100 text-base-content" name="ingredient-unit[]" />
+					</div>
+					<div class="col-span-2 sm:col-span-1 flex justify-center">
+						<button type="button" class="btn btn-ghost btn-sm btn-circle hover:btn-error transition-all remove-ingredient">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+							</svg>
+						</button>
+					</div>
+				</div>
 			</div>
 		`;
 		list?.insertAdjacentHTML('beforeend', template);
@@ -394,14 +495,16 @@ const difficulties = ['easy', 'medium', 'hard'];
 		const list = document.getElementById('instructions-list');
 		const count = list?.querySelectorAll('.instruction-row').length || 0;
 		const template = `
-			<div class="instruction-row flex gap-3 p-3 bg-base-100 rounded-lg">
-				<span class="badge badge-primary badge-lg flex-shrink-0">${count + 1}</span>
-				<textarea placeholder="Describe this step in detail..." class="textarea textarea-bordered flex-1" name="instruction[]" rows="2" required></textarea>
-				<button type="button" class="btn btn-ghost btn-sm btn-circle flex-shrink-0 remove-instruction">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-					</svg>
-				</button>
+			<div class="instruction-row rounded-lg p-3 sm:p-4 shadow-xs hover:shadow-sm transition-all border-l-4 border-orange-400">
+				<div class="flex gap-4 items-start">
+					<div class="badge badge-lg h-10 w-10 bg-orange-100 text-orange-600 flex-shrink-0 text-base font-bold border-0">${count + 1}</div>
+					<textarea placeholder="Describe this step in detail..." class="textarea textarea-bordered flex-1 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all min-h-[100px] border-orange-200 hover:border-orange-300 bg-base-100 text-base-content resize-none" name="instruction[]" rows="3" required></textarea>
+					<button type="button" class="btn btn-ghost btn-sm btn-circle flex-shrink-0 hover:btn-error transition-all remove-instruction">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+						</svg>
+					</button>
+				</div>
 			</div>
 		`;
 		list?.insertAdjacentHTML('beforeend', template);

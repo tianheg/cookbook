@@ -23,16 +23,15 @@ export async function uploadImageToR2(
     throw new Error('File size exceeds 5MB limit');
   }
 
-  // Generate unique filename
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(7);
+  // Generate unique filename using UUID
+  const uuid = crypto.randomUUID();
   const extension = file.type.split('/')[1];
-  const filename = `recipes/${recipeName.toLowerCase().replace(/\s+/g, '-')}-${timestamp}-${random}.${extension}`;
+  const filename = `${uuid}.${extension}`;
 
   try {
     const buffer = await file.arrayBuffer();
     
-    const putObject = await bucket.put(filename, buffer, {
+    await bucket.put(filename, buffer, {
       httpMetadata: {
         contentType: file.type,
       },
@@ -42,8 +41,6 @@ export async function uploadImageToR2(
       },
     });
 
-    // Return the public URL for the uploaded image
-    // Note: Adjust the domain based on your R2 bucket's public domain
     return `${process.env.R2_PUBLIC_URL || 'https://recipes.example.com'}/${filename}`;
   } catch (error) {
     console.error('R2 upload error:', error);
