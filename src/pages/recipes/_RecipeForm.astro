@@ -614,27 +614,30 @@ const formMethod = isEditing ? 'PUT' : 'POST';
 		const ingredientUnits = formData.getAll('ingredient-unit[]');
 		
 		const ingredients = ingredientNames.map((name, i) => ({
-			name: name,
-			amount: ingredientAmounts[i],
-			unit: ingredientUnits[i] || null
+			name: name?.toString().trim() || '',
+			amount: ingredientAmounts[i]?.toString().trim() || '',
+			unit: ingredientUnits[i]?.toString().trim() || null
 		})).filter(ing => ing.name && ing.amount);
 
 		// Parse instructions
 		const instructions = formData.getAll('instruction[]')
-			.map(inst => inst)
-			.filter(inst => inst.trim());
+			.map(inst => inst?.toString().trim())
+			.filter(inst => inst && inst.length > 0);
 
 		// Build request body with proper field names
 		const data = {
 			title: formData.get('title'),
-			description: formData.get('description') || null,
+			description: formData.get('description')?.toString().trim() || null,
 			prepTime: formData.get('prepTime') ? parseInt(formData.get('prepTime')) : null,
 			cookTime: formData.get('cookTime') ? parseInt(formData.get('cookTime')) : null,
 			servings: formData.get('servings') ? parseInt(formData.get('servings')) : null,
-			difficulty: formData.get('difficulty') || null,
-			category: formData.get('category') || null,
-			imageUrl: formData.get('imageUrl') || null,
-			ingredients,
+			difficulty: formData.get('difficulty')?.toString() || null,
+			category: formData.get('category')?.toString().trim() || null,
+			imageUrl: formData.get('imageUrl')?.toString().trim() || null,
+			ingredients: ingredients.map(ing => ({
+				...ing,
+				unit: ing.unit?.trim() || null
+			})),
 			instructions
 		};
 

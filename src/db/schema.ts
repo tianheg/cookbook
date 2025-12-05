@@ -69,19 +69,19 @@ export const insertInstructionSchema = createInsertSchema(instructions, {
 // Complete recipe creation schema
 export const createRecipeSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
-  description: z.string().optional(),
-  prepTime: z.number().int().positive().optional().nullable(),
-  cookTime: z.number().int().positive().optional().nullable(),
-  servings: z.number().int().positive().optional().nullable(),
-  difficulty: z.enum(['easy', 'medium', 'hard']).optional().nullable(),
-  category: z.string().optional().nullable(),
-  imageUrl: z.string().url().optional().nullable(),
+  description: z.string().nullable().optional(),
+  prepTime: z.number().int().positive().nullable().optional(),
+  cookTime: z.number().int().positive().nullable().optional(),
+  servings: z.number().int().positive().nullable().optional(),
+  difficulty: z.enum(['easy', 'medium', 'hard']).nullable().optional(),
+  category: z.string().nullable().optional(),
+  imageUrl: z.string().url().nullable().optional(),
   ingredients: z
     .array(
       z.object({
         name: z.string().min(1),
         amount: z.string().min(1),
-        unit: z.string().optional().nullable(),
+        unit: z.string().nullable().optional(),
       })
     )
     .min(1, 'At least one ingredient is required'),
