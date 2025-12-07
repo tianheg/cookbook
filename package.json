@@ -20,6 +20,7 @@
 		"dotenv": "^17.2.3",
 		"drizzle-orm": "^0.44.7",
 		"drizzle-zod": "^0.8.3",
+		"pinyin-pro": "^3.27.0",
 		"tailwindcss": "^4.1.17",
 		"zod": "^4.1.13"
 	},

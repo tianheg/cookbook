@@ -2,6 +2,8 @@
  * R2 bucket utilities for recipe image uploads
  */
 
+import { textToPinyin } from '../utils/pinyin';
+
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -23,10 +25,12 @@ export async function uploadImageToR2(
     throw new Error('File size exceeds 5MB limit');
   }
 
-  // Generate unique filename using UUID
-  const uuid = crypto.randomUUID();
+  // Generate filename with pinyin conversion from recipe name
   const extension = file.type.split('/')[1];
-  const filename = `${uuid}.${extension}`;
+  const pinyinName = textToPinyin(recipeName);
+  const timestamp = Date.now();
+  // Use format: pinyin-name-timestamp.extension to ensure uniqueness
+  const filename = `${pinyinName}-${timestamp}.${extension}`;
 
   try {
     const buffer = await file.arrayBuffer();
