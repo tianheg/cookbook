@@ -633,13 +633,18 @@ const formMethod = isEditing ? 'PUT' : 'POST';
 			servings: formData.get('servings') ? parseInt(formData.get('servings')) : null,
 			difficulty: formData.get('difficulty')?.toString() || null,
 			category: formData.get('category')?.toString().trim() || null,
-			imageUrl: formData.get('imageUrl')?.toString().trim() || null,
 			ingredients: ingredients.map(ing => ({
 				...ing,
 				unit: ing.unit?.trim() || null
 			})),
 			instructions
 		};
+
+		// Only include imageUrl if a new one was uploaded (when editing, don't send null)
+		const imageUrl = formData.get('imageUrl')?.toString().trim();
+		if (imageUrl || !isEditing) {
+			data.imageUrl = imageUrl || null;
+		}
 
 		try {
 			const method = isEditing ? 'PUT' : 'POST';
