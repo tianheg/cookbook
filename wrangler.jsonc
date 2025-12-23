@@ -22,12 +22,6 @@
 			"migrations_dir": "drizzle"
 		}
 	],
-	"kv_namespaces": [
-		{
-			"binding": "SESSION",
-			"id": "741fd40d7f5e46a2a85429c79caca933"
-		}
-	],
 	"r2_buckets": [
 		{
 			"binding": "RECIPES_BUCKET",
